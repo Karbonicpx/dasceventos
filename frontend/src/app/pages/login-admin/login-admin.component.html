@@ -1,0 +1,16 @@
+<div class="container">
+  <h2>Entrar - Diretoria do DASC</h2>
+  <form (ngSubmit)="entrar()">
+    <label>
+      E-mail
+      <input type="email" name="email" [(ngModel)]="email" required />
+    </label>
+    <label>
+      Senha
+      <input type="password" name="senha" [(ngModel)]="senha" required />
+    </label>
+    <p class="erro" *ngIf="erro">{{ erro }}</p>
+    <button type="submit">Entrar</button>
+  </form>
+  <p><a routerLink="/login-aluno">Sou aluno</a></p>
+</div>

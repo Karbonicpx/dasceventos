@@ -1,0 +1,32 @@
+<div class="container">
+  <h2>Cadastro de Aluno</h2>
+  <form (ngSubmit)="cadastrar()">
+    <label>
+      Nome
+      <input type="text" name="nome" [(ngModel)]="dto.nome" required />
+    </label>
+    <label>
+      E-mail
+      <input type="email" name="email" [(ngModel)]="dto.email" required />
+    </label>
+    <label>
+      Curso
+      <select name="curso" [(ngModel)]="dto.curso" required>
+        <option value="Sistemas de Informação">Sistemas de Informação</option>
+        <option value="Engenharia de Computação">Engenharia de Computação</option>
+      </select>
+    </label>
+    <label>
+      Telefone
+      <input type="tel" name="telefone" [(ngModel)]="dto.telefone" />
+    </label>
+    <label>
+      Senha
+      <input type="password" name="senha" [(ngModel)]="dto.senha" required minlength="6" />
+    </label>
+    <p class="erro" *ngIf="erro">{{ erro }}</p>
+    <p class="sucesso" *ngIf="sucesso">Cadastro realizado! Redirecionando para o login...</p>
+    <button type="submit">Cadastrar</button>
+  </form>
+  <p><a routerLink="/login-aluno">Já tenho conta</a></p>
+</div>

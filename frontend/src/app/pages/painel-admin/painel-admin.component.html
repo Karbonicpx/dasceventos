@@ -1,0 +1,41 @@
+<div class="container">
+  <h2>Painel da Diretoria - DASC</h2>
+  <p>
+    <a routerLink="/admin/eventos/novo">+ Novo evento</a>
+    &nbsp;|&nbsp;
+    <a (click)="sair()" style="cursor:pointer">Sair</a>
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Evento</th>
+        <th>Data</th>
+        <th>Vagas</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let evento of eventos">
+        <td>{{ evento.titulo }}</td>
+        <td>{{ evento.data }} {{ evento.horario }}</td>
+        <td>{{ evento.vagasDisponiveis }} / {{ evento.vagasTotais }}</td>
+        <td>
+          <a (click)="verInscritos(evento)" style="cursor:pointer">Inscritos</a>
+          &nbsp;|&nbsp;
+          <a (click)="excluir(evento)" style="cursor:pointer">Excluir</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="eventoExpandidoId">
+    <h3>Inscritos</h3>
+    <ul>
+      <li *ngFor="let inscricao of inscritosPorEvento[eventoExpandidoId]">
+        {{ inscricao.alunoNome }} - inscrito em {{ inscricao.dataInscricao }}
+      </li>
+    </ul>
+    <p *ngIf="(inscritosPorEvento[eventoExpandidoId] ?? []).length === 0">Nenhum inscrito ainda.</p>
+  </div>
+</div>

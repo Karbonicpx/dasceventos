@@ -1,0 +1,15 @@
+<div class="container">
+  <h2>Eventos de Extensão - DASC</h2>
+  <p *ngIf="carregando">Carregando eventos...</p>
+  <p *ngIf="!carregando && eventos.length === 0">Nenhum evento disponível no momento.</p>
+
+  <div class="cards">
+    <div class="card" *ngFor="let evento of eventos">
+      <h3>{{ evento.titulo }}</h3>
+      <p class="categoria">{{ rotuloCategoria(evento.categoria) }}</p>
+      <p>{{ evento.data }} às {{ evento.horario }} - {{ evento.local }}</p>
+      <p>{{ evento.vagasDisponiveis }} / {{ evento.vagasTotais }} vagas disponíveis</p>
+      <a [routerLink]="['/eventos', evento.id]">Ver detalhes</a>
+    </div>
+  </div>
+</div>

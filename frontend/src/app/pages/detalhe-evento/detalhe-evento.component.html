@@ -1,0 +1,31 @@
+<div class="container" *ngIf="evento">
+  <p><a routerLink="/eventos">&larr; Voltar aos eventos</a></p>
+  <h2>{{ evento.titulo }}</h2>
+  <p>{{ evento.descricao }}</p>
+  <p><strong>Data:</strong> {{ evento.data }} às {{ evento.horario }}</p>
+  <p><strong>Local:</strong> {{ evento.local }}</p>
+  <p><strong>Vagas:</strong> {{ evento.vagasDisponiveis }} / {{ evento.vagasTotais }}</p>
+
+  <h3>Atividades</h3>
+  <ul>
+    <li *ngFor="let atividade of atividades">
+      {{ atividade.horario }} - {{ atividade.nome }}
+      <span *ngIf="atividade.tema"> ({{ atividade.tema }})</span>
+      - {{ atividade.duracaoMinutos }} min
+    </li>
+  </ul>
+  <p *ngIf="atividades.length === 0">Nenhuma atividade cadastrada ainda.</p>
+
+  <div *ngIf="authService.usuarioAtual()?.tipo === 'ALUNO'">
+    <p class="erro" *ngIf="erro">{{ erro }}</p>
+    <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
+    <button *ngIf="!minhaInscricao" (click)="inscrever()" [disabled]="(evento.vagasDisponiveis ?? 0) <= 0">
+      Inscrever-se
+    </button>
+    <button *ngIf="minhaInscricao" (click)="cancelar()">Cancelar inscrição</button>
+  </div>
+
+  <p *ngIf="!authService.estaLogado()">
+    <a routerLink="/login-aluno">Entre como aluno</a> para se inscrever neste evento.
+  </p>
+</div>
