@@ -1,15 +1,28 @@
-<div class="container">
-  <h2>Eventos de Extensão - DASC</h2>
+<section class="hero">
+  <h1>Eventos de Extensão do DASC</h1>
+  <p>Fique por dentro da SECOMP+, COINTER, Trote Solidário, Grade na Hora e muito mais. Inscreva-se em poucos cliques.</p>
+</section>
+
+<div class="secao-eventos">
+  <h2>Próximos eventos</h2>
   <p *ngIf="carregando">Carregando eventos...</p>
-  <p *ngIf="!carregando && eventos.length === 0">Nenhum evento disponível no momento.</p>
+
+  <div class="estado-vazio" *ngIf="!carregando && eventos.length === 0">
+    Nenhum evento disponível no momento. Volte em breve!
+  </div>
 
   <div class="cards">
     <div class="card" *ngFor="let evento of eventos">
+      <span class="badge" [ngClass]="'badge-' + evento.categoria.toLowerCase()">{{ rotuloCategoria(evento.categoria) }}</span>
       <h3>{{ evento.titulo }}</h3>
-      <p class="categoria">{{ rotuloCategoria(evento.categoria) }}</p>
-      <p>{{ evento.data }} às {{ evento.horario }} - {{ evento.local }}</p>
-      <p>{{ evento.vagasDisponiveis }} / {{ evento.vagasTotais }} vagas disponíveis</p>
-      <a [routerLink]="['/eventos', evento.id]">Ver detalhes</a>
+      <p class="card-desc">{{ evento.descricao }}</p>
+      <p class="card-info">{{ evento.data | date: 'dd/MM/yyyy' }} às {{ evento.horario }}</p>
+      <p class="card-info">{{ evento.local }}</p>
+      <p class="card-vagas"
+         [ngClass]="(evento.vagasDisponiveis ?? 0) === 0 ? 'lotado' : (evento.vagasDisponiveis ?? 0) <= 5 ? 'poucas' : 'disponivel'">
+        {{ (evento.vagasDisponiveis ?? 0) === 0 ? 'Vagas esgotadas' : (evento.vagasDisponiveis + ' / ' + evento.vagasTotais + ' vagas disponíveis') }}
+      </p>
+      <a [routerLink]="['/eventos', evento.id]" class="botao">Ver detalhes</a>
     </div>
   </div>
 </div>

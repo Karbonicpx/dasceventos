@@ -1,4 +1,4 @@
-export type CategoriaEvento = 'PALESTRA' | 'MINICURSO' | 'SECOMP_MAIS' | 'COINTER' | 'TROTE_SOLIDARIO';
+export type CategoriaEvento = 'PALESTRA' | 'MINICURSO' | 'SECOMP_MAIS' | 'COINTER' | 'TROTE_SOLIDARIO' | 'GRADE_NA_HORA';
 
 export interface Evento {
   id?: number;

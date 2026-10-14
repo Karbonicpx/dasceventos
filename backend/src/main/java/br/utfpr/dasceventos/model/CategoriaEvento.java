@@ -5,5 +5,6 @@ public enum CategoriaEvento {
     MINICURSO,
     SECOMP_MAIS,
     COINTER,
-    TROTE_SOLIDARIO
+    TROTE_SOLIDARIO,
+    GRADE_NA_HORA
 }

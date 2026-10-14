@@ -1,6 +1,36 @@
 <header class="topo">
-  <a routerLink="/eventos" class="marca">DASCEventos</a>
+  <div class="topo-conteudo">
+    <a routerLink="/eventos" class="marca">
+      <span class="marca-logo">DA</span>
+      <span class="marca-texto">DASC<strong>Eventos</strong></span>
+    </a>
+
+    <nav class="nav-principal">
+      <a routerLink="/eventos" routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">Eventos</a>
+
+      <ng-container *ngIf="!authService.estaLogado()">
+        <a routerLink="/login-aluno" routerLinkActive="ativo">Entrar</a>
+        <a routerLink="/cadastro-aluno" class="nav-cta">Cadastre-se</a>
+      </ng-container>
+
+      <ng-container *ngIf="authService.estaLogado() && !authService.ehAdministrador()">
+        <span class="nav-usuario">Olá, {{ authService.usuarioAtual()?.nome }}</span>
+        <a (click)="sair()" class="nav-sair">Sair</a>
+      </ng-container>
+
+      <ng-container *ngIf="authService.ehAdministrador()">
+        <a routerLink="/admin" routerLinkActive="ativo">Painel DASC</a>
+        <a (click)="sair()" class="nav-sair">Sair</a>
+      </ng-container>
+    </nav>
+  </div>
 </header>
+
 <main>
   <router-outlet></router-outlet>
 </main>
+
+<footer class="rodape">
+  <p>DASC &middot; Diretório Acadêmico de Engenharia de Computação e Sistemas de Informação &middot; UTFPR Curitiba</p>
+  <p class="rodape-sub">Projeto acadêmico de Projeto e Análise de Algoritmos &mdash; DASCEventos 2026</p>
+</footer>

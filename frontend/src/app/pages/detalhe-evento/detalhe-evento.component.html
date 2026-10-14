@@ -1,31 +1,52 @@
 <div class="container" *ngIf="evento">
-  <p><a routerLink="/eventos">&larr; Voltar aos eventos</a></p>
-  <h2>{{ evento.titulo }}</h2>
-  <p>{{ evento.descricao }}</p>
-  <p><strong>Data:</strong> {{ evento.data }} às {{ evento.horario }}</p>
-  <p><strong>Local:</strong> {{ evento.local }}</p>
-  <p><strong>Vagas:</strong> {{ evento.vagasDisponiveis }} / {{ evento.vagasTotais }}</p>
+  <a routerLink="/eventos" class="voltar">&larr; Voltar aos eventos</a>
 
-  <h3>Atividades</h3>
-  <ul>
-    <li *ngFor="let atividade of atividades">
-      {{ atividade.horario }} - {{ atividade.nome }}
-      <span *ngIf="atividade.tema"> ({{ atividade.tema }})</span>
-      - {{ atividade.duracaoMinutos }} min
-    </li>
-  </ul>
-  <p *ngIf="atividades.length === 0">Nenhuma atividade cadastrada ainda.</p>
+  <div class="detalhe-cabecalho">
+    <span class="badge" [ngClass]="'badge-' + evento.categoria.toLowerCase()">{{ rotuloCategoria(evento.categoria) }}</span>
+    <h2>{{ evento.titulo }}</h2>
+    <p class="detalhe-descricao">{{ evento.descricao }}</p>
 
-  <div *ngIf="authService.usuarioAtual()?.tipo === 'ALUNO'">
-    <p class="erro" *ngIf="erro">{{ erro }}</p>
-    <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
-    <button *ngIf="!minhaInscricao" (click)="inscrever()" [disabled]="(evento.vagasDisponiveis ?? 0) <= 0">
-      Inscrever-se
-    </button>
-    <button *ngIf="minhaInscricao" (click)="cancelar()">Cancelar inscrição</button>
+    <div class="detalhe-grade">
+      <div class="detalhe-item">
+        <span class="rotulo">Data e horário</span>
+        <span class="valor">{{ evento.data | date: 'dd/MM/yyyy' }} às {{ evento.horario }}</span>
+      </div>
+      <div class="detalhe-item">
+        <span class="rotulo">Local</span>
+        <span class="valor">{{ evento.local }}</span>
+      </div>
+      <div class="detalhe-item">
+        <span class="rotulo">Vagas</span>
+        <span class="valor">{{ evento.vagasDisponiveis }} / {{ evento.vagasTotais }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="authService.usuarioAtual()?.tipo === 'ALUNO'">
+      <p class="erro" *ngIf="erro">{{ erro }}</p>
+      <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
+      <button *ngIf="!minhaInscricao" (click)="inscrever()" [disabled]="(evento.vagasDisponiveis ?? 0) <= 0">
+        {{ (evento.vagasDisponiveis ?? 0) <= 0 ? 'Vagas esgotadas' : 'Inscrever-se' }}
+      </button>
+      <button *ngIf="minhaInscricao" (click)="cancelar()" class="botao-perigo">Cancelar inscrição</button>
+    </div>
+
+    <p *ngIf="!authService.estaLogado()" class="link-rodape">
+      <a routerLink="/login-aluno">Entre como aluno</a> para se inscrever neste evento.
+    </p>
   </div>
 
-  <p *ngIf="!authService.estaLogado()">
-    <a routerLink="/login-aluno">Entre como aluno</a> para se inscrever neste evento.
-  </p>
+  <div class="secao">
+    <h3>Programação</h3>
+    <ul class="timeline" *ngIf="atividades.length > 0">
+      <li *ngFor="let atividade of atividades">
+        <span class="horario">{{ atividade.horario }}</span>
+        <span>
+          <span class="atividade-nome">{{ atividade.nome }}</span>
+          <span class="atividade-tema" *ngIf="atividade.tema"> &mdash; {{ atividade.tema }}</span>
+        </span>
+        <span class="duracao">{{ atividade.duracaoMinutos }} min</span>
+      </li>
+    </ul>
+    <p *ngIf="atividades.length === 0" style="color: var(--cor-texto-suave)">Nenhuma atividade cadastrada ainda.</p>
+  </div>
 </div>

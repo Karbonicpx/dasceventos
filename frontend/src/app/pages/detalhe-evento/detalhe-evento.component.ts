@@ -53,6 +53,18 @@ export class DetalheEventoComponent implements OnInit {
     });
   }
 
+  rotuloCategoria(categoria: string): string {
+    const rotulos: Record<string, string> = {
+      PALESTRA: 'Palestra',
+      MINICURSO: 'Minicurso',
+      SECOMP_MAIS: 'SECOMP+',
+      COINTER: 'COINTER',
+      TROTE_SOLIDARIO: 'Trote Solidário',
+      GRADE_NA_HORA: 'Grade na Hora'
+    };
+    return rotulos[categoria] ?? categoria;
+  }
+
   cancelar(): void {
     const usuario = this.authService.usuarioAtual();
     if (!usuario || !this.evento?.id) return;

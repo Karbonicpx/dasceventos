@@ -1,42 +1,47 @@
-<div class="container">
-  <h2>Novo Evento</h2>
-  <form (ngSubmit)="salvar()">
-    <label>
-      Título
-      <input type="text" name="titulo" [(ngModel)]="evento.titulo" required />
-    </label>
-    <label>
-      Descrição
-      <textarea name="descricao" [(ngModel)]="evento.descricao"></textarea>
-    </label>
-    <label>
-      Categoria
-      <select name="categoria" [(ngModel)]="evento.categoria" required>
-        <option value="PALESTRA">Palestra</option>
-        <option value="MINICURSO">Minicurso</option>
-        <option value="SECOMP_MAIS">SECOMP+</option>
-        <option value="COINTER">COINTER</option>
-        <option value="TROTE_SOLIDARIO">Trote Solidário</option>
-      </select>
-    </label>
-    <label>
-      Data
-      <input type="date" name="data" [(ngModel)]="evento.data" required />
-    </label>
-    <label>
-      Horário
-      <input type="time" name="horario" [(ngModel)]="evento.horario" required />
-    </label>
-    <label>
-      Local
-      <input type="text" name="local" [(ngModel)]="evento.local" required />
-    </label>
-    <label>
-      Vagas totais
-      <input type="number" name="vagasTotais" [(ngModel)]="evento.vagasTotais" min="1" required />
-    </label>
-    <p class="erro" *ngIf="erro">{{ erro }}</p>
-    <button type="submit">Salvar</button>
-  </form>
-  <p><a routerLink="/admin">Voltar ao painel</a></p>
+<div class="container" style="max-width: 640px; margin: 2rem auto;">
+  <div class="cartao">
+    <h2>Novo Evento</h2>
+    <form (ngSubmit)="salvar()">
+      <label>
+        Título
+        <input type="text" name="titulo" [(ngModel)]="evento.titulo" required />
+      </label>
+      <label>
+        Descrição
+        <textarea name="descricao" [(ngModel)]="evento.descricao"></textarea>
+      </label>
+      <label>
+        Categoria
+        <select name="categoria" [(ngModel)]="evento.categoria" required>
+          <option value="PALESTRA">Palestra</option>
+          <option value="MINICURSO">Minicurso</option>
+          <option value="SECOMP_MAIS">SECOMP+</option>
+          <option value="COINTER">COINTER</option>
+          <option value="TROTE_SOLIDARIO">Trote Solidário</option>
+          <option value="GRADE_NA_HORA">Grade na Hora</option>
+        </select>
+      </label>
+      <label>
+        Data
+        <input type="date" name="data" [(ngModel)]="evento.data" required />
+      </label>
+      <label>
+        Horário
+        <input type="time" name="horario" [(ngModel)]="evento.horario" required />
+      </label>
+      <label>
+        Local
+        <input type="text" name="local" [(ngModel)]="evento.local" required />
+      </label>
+      <label>
+        Vagas totais
+        <input type="number" name="vagasTotais" [(ngModel)]="evento.vagasTotais" min="1" required />
+      </label>
+      <p class="erro" *ngIf="erro">{{ erro }}</p>
+      <div style="display: flex; gap: 0.8rem;">
+        <button type="submit">Salvar</button>
+        <a routerLink="/admin" class="botao botao-secundario">Cancelar</a>
+      </div>
+    </form>
+  </div>
 </div>

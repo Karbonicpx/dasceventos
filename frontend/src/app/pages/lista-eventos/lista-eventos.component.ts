@@ -30,7 +30,8 @@ export class ListaEventosComponent implements OnInit {
       MINICURSO: 'Minicurso',
       SECOMP_MAIS: 'SECOMP+',
       COINTER: 'COINTER',
-      TROTE_SOLIDARIO: 'Trote Solidário'
+      TROTE_SOLIDARIO: 'Trote Solidário',
+      GRADE_NA_HORA: 'Grade na Hora'
     };
     return rotulos[categoria] ?? categoria;
   }

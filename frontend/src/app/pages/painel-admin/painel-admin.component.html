@@ -1,10 +1,11 @@
 <div class="container">
-  <h2>Painel da Diretoria - DASC</h2>
-  <p>
-    <a routerLink="/admin/eventos/novo">+ Novo evento</a>
-    &nbsp;|&nbsp;
-    <a (click)="sair()" style="cursor:pointer">Sair</a>
-  </p>
+  <div class="painel-topo">
+    <h2>Painel da Diretoria &mdash; DASC</h2>
+    <div class="painel-acoes">
+      <a routerLink="/admin/eventos/novo" class="botao">+ Novo evento</a>
+      <a (click)="sair()" class="acao-link perigo">Sair</a>
+    </div>
+  </div>
 
   <table>
     <thead>
@@ -18,24 +19,25 @@
     <tbody>
       <tr *ngFor="let evento of eventos">
         <td>{{ evento.titulo }}</td>
-        <td>{{ evento.data }} {{ evento.horario }}</td>
+        <td>{{ evento.data | date: 'dd/MM/yyyy' }} {{ evento.horario }}</td>
         <td>{{ evento.vagasDisponiveis }} / {{ evento.vagasTotais }}</td>
         <td>
-          <a (click)="verInscritos(evento)" style="cursor:pointer">Inscritos</a>
-          &nbsp;|&nbsp;
-          <a (click)="excluir(evento)" style="cursor:pointer">Excluir</a>
+          <a (click)="verInscritos(evento)" class="acao-link">Inscritos</a>
+          <a (click)="excluir(evento)" class="acao-link perigo">Excluir</a>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <div *ngIf="eventoExpandidoId">
+  <div class="secao" *ngIf="eventoExpandidoId" style="margin-top: 1.5rem;">
     <h3>Inscritos</h3>
-    <ul>
+    <ul class="lista-inscritos">
       <li *ngFor="let inscricao of inscritosPorEvento[eventoExpandidoId]">
-        {{ inscricao.alunoNome }} - inscrito em {{ inscricao.dataInscricao }}
+        {{ inscricao.alunoNome }} &mdash; inscrito em {{ inscricao.dataInscricao | date: 'dd/MM/yyyy' }}
       </li>
     </ul>
-    <p *ngIf="(inscritosPorEvento[eventoExpandidoId] ?? []).length === 0">Nenhum inscrito ainda.</p>
+    <p *ngIf="(inscritosPorEvento[eventoExpandidoId] ?? []).length === 0" style="color: var(--cor-texto-suave)">
+      Nenhum inscrito ainda.
+    </p>
   </div>
 </div>
