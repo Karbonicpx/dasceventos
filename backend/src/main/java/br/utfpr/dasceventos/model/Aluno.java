@@ -31,12 +31,19 @@ public class Aluno {
     @Column(nullable = false, length = 80)
     private String curso;
 
+    @NotBlank
+    @Column(name = "registro_academico", nullable = false, unique = true, length = 20)
+    private String registroAcademico;
+
     @Column(length = 20)
     private String telefone;
 
     @NotBlank
     @Column(nullable = false, length = 255)
     private String senha;
+
+    @Column(name = "foto_perfil", columnDefinition = "LONGTEXT")
+    private String fotoPerfil;
 
     @Column(name = "data_cadastro", nullable = false)
     private LocalDateTime dataCadastro;

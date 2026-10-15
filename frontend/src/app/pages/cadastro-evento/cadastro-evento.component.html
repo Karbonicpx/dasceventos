@@ -1,10 +1,18 @@
 <div class="container" style="max-width: 640px; margin: 2rem auto;">
   <div class="cartao">
-    <h2>Novo Evento</h2>
-    <form (ngSubmit)="salvar()">
+    <h2>{{ modoEdicao ? 'Editar Evento' : 'Novo Evento' }}</h2>
+
+    <div class="tabs-toggle" *ngIf="modoEdicao">
+      <button type="button" [class.ativo]="abaAtiva === 'INFO'" (click)="abaAtiva = 'INFO'">Informações</button>
+      <button type="button" [class.ativo]="abaAtiva === 'ATIVIDADES'" (click)="abaAtiva = 'ATIVIDADES'">Atividades</button>
+    </div>
+
+    <form *ngIf="abaAtiva === 'INFO'" #form="ngForm" (ngSubmit)="salvar(form)" novalidate>
       <label>
         Título
-        <input type="text" name="titulo" [(ngModel)]="evento.titulo" required />
+        <input type="text" name="titulo" [(ngModel)]="evento.titulo" required #titulo="ngModel"
+               [class.campo-invalido]="form.submitted && titulo.invalid" />
+        <span class="campo-erro" *ngIf="form.submitted && titulo.invalid">Informe o título do evento.</span>
       </label>
       <label>
         Descrição
@@ -15,33 +23,108 @@
         <select name="categoria" [(ngModel)]="evento.categoria" required>
           <option value="PALESTRA">Palestra</option>
           <option value="MINICURSO">Minicurso</option>
-          <option value="SECOMP_MAIS">SECOMP+</option>
-          <option value="COINTER">COINTER</option>
-          <option value="TROTE_SOLIDARIO">Trote Solidário</option>
-          <option value="GRADE_NA_HORA">Grade na Hora</option>
+          <option value="SEMANA_ACADEMICA">Semana Acadêmica</option>
+          <option value="CONGRESSO">Congresso</option>
+          <option value="ACAO_SOCIAL">Ação Social</option>
+          <option value="ATENDIMENTO">Atendimento</option>
+          <option value="OUTROS">Outros</option>
         </select>
       </label>
       <label>
         Data
-        <input type="date" name="data" [(ngModel)]="evento.data" required />
+        <input type="date" name="data" [(ngModel)]="evento.data" required #data="ngModel"
+               [class.campo-invalido]="form.submitted && data.invalid" />
+        <span class="campo-erro" *ngIf="form.submitted && data.invalid">Selecione a data do evento.</span>
       </label>
       <label>
         Horário
-        <input type="time" name="horario" [(ngModel)]="evento.horario" required />
+        <input type="time" name="horario" [(ngModel)]="evento.horario" required #horario="ngModel"
+               [class.campo-invalido]="form.submitted && horario.invalid" />
+        <span class="campo-erro" *ngIf="form.submitted && horario.invalid">Selecione o horário do evento.</span>
       </label>
       <label>
         Local
-        <input type="text" name="local" [(ngModel)]="evento.local" required />
+        <input type="text" name="local" [(ngModel)]="evento.local" required #local="ngModel"
+               [class.campo-invalido]="form.submitted && local.invalid" />
+        <span class="campo-erro" *ngIf="form.submitted && local.invalid">Informe o local do evento.</span>
       </label>
       <label>
         Vagas totais
-        <input type="number" name="vagasTotais" [(ngModel)]="evento.vagasTotais" min="1" required />
+        <input type="number" name="vagasTotais" [(ngModel)]="evento.vagasTotais" min="1" required #vagasTotais="ngModel"
+               [class.campo-invalido]="form.submitted && vagasTotais.invalid" />
+        <span class="campo-erro" *ngIf="form.submitted && vagasTotais.invalid">Informe um número de vagas válido (mínimo 1).</span>
       </label>
+
+      <label>Fotos do banner (opcional, até 3)</label>
+      <div class="banner-slots">
+        <div class="banner-slot" *ngFor="let foto of banners; let i = index">
+          <img *ngIf="foto" [src]="foto" alt="" />
+          <div *ngIf="!foto" class="banner-slot-vazio">Foto {{ i + 1 }}</div>
+          <div class="banner-slot-acoes">
+            <label class="botao botao-secundario banner-botao">
+              {{ foto ? 'Trocar' : 'Adicionar' }}
+              <input type="file" accept="image/*" (change)="selecionarBanner($event, i)" hidden />
+            </label>
+            <a *ngIf="foto" (click)="removerBanner(i)" class="acao-link perigo">Remover</a>
+          </div>
+        </div>
+      </div>
+      <p class="erro" *ngIf="erroBanner">{{ erroBanner }}</p>
+
+      <p *ngIf="!modoEdicao" class="link-rodape" style="text-align: left; margin: 0 0 0.8rem;">
+        A programação (atividades) do evento pode ser adicionada logo após salvar.
+      </p>
+
       <p class="erro" *ngIf="erro">{{ erro }}</p>
-      <div style="display: flex; gap: 0.8rem;">
-        <button type="submit">Salvar</button>
-        <a routerLink="/admin" class="botao botao-secundario">Cancelar</a>
+      <div style="display: flex; gap: 0.8rem; margin-top: 0.6rem;">
+        <button type="submit">{{ modoEdicao ? 'Salvar alterações' : 'Cadastrar e continuar' }}</button>
+        <a routerLink="/admin" class="botao botao-secundario">{{ modoEdicao ? 'Voltar' : 'Cancelar' }}</a>
       </div>
     </form>
+
+    <div *ngIf="modoEdicao && abaAtiva === 'ATIVIDADES'">
+      <ul class="timeline" *ngIf="atividades.length">
+        <li *ngFor="let atividade of atividades">
+          <span class="horario">{{ atividade.horario | slice:0:5 }}</span>
+          <div>
+            <div class="atividade-nome">{{ atividade.nome }}</div>
+            <div class="atividade-tema" *ngIf="atividade.tema">{{ atividade.tema }}</div>
+          </div>
+          <span class="duracao">{{ atividade.duracaoMinutos }} min</span>
+          <a (click)="removerAtividade(atividade)" class="acao-link perigo" style="margin-left: 1rem;">Remover</a>
+        </li>
+      </ul>
+      <p *ngIf="!atividades.length" style="color: var(--cor-texto-suave)">Nenhuma atividade cadastrada ainda.</p>
+
+      <form #formAtividade="ngForm" (ngSubmit)="adicionarAtividade(formAtividade)" novalidate style="margin-top: 1.4rem;">
+        <label>
+          Nome da atividade
+          <input type="text" name="nomeAtividade" [(ngModel)]="novaAtividade.nome" required #nomeAtividade="ngModel"
+                 [class.campo-invalido]="atividadeEnviada && nomeAtividade.invalid" />
+          <span class="campo-erro" *ngIf="atividadeEnviada && nomeAtividade.invalid">Informe o nome da atividade.</span>
+        </label>
+        <label>
+          Tema (opcional)
+          <input type="text" name="temaAtividade" [(ngModel)]="novaAtividade.tema" />
+        </label>
+        <label>
+          Horário
+          <input type="time" name="horarioAtividade" [(ngModel)]="novaAtividade.horario" required [min]="evento.horario" #horarioAtividade="ngModel"
+                 [class.campo-invalido]="atividadeEnviada && (horarioAtividade.invalid || horarioAtividadeAntesDoEvento())" />
+          <span class="campo-erro" *ngIf="atividadeEnviada && horarioAtividade.invalid">Selecione o horário da atividade.</span>
+          <span class="campo-erro" *ngIf="atividadeEnviada && !horarioAtividade.invalid && horarioAtividadeAntesDoEvento()">
+            O horário deve ser igual ou posterior ao início do evento ({{ evento.horario | slice:0:5 }}).
+          </span>
+        </label>
+        <label>
+          Duração (minutos)
+          <input type="number" name="duracaoAtividade" [(ngModel)]="novaAtividade.duracaoMinutos" min="1" required #duracaoAtividade="ngModel"
+                 [class.campo-invalido]="atividadeEnviada && duracaoAtividade.invalid" />
+          <span class="campo-erro" *ngIf="atividadeEnviada && duracaoAtividade.invalid">Informe uma duração válida (mínimo 1 minuto).</span>
+        </label>
+        <p class="erro" *ngIf="erroAtividade">{{ erroAtividade }}</p>
+        <button type="submit" class="botao-secundario">+ Adicionar atividade</button>
+      </form>
+    </div>
   </div>
 </div>

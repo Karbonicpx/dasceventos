@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="painel-topo">
+    <h2>Validar contas da diretoria</h2>
+    <a routerLink="/admin" class="botao botao-secundario">
+      <svg class="botao-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Voltar ao painel
+    </a>
+  </div>
+
+  <p *ngIf="carregando">Carregando...</p>
+
+  <div class="estado-vazio" *ngIf="!carregando && pendentes.length === 0">
+    Nenhuma conta aguardando validação no momento.
+  </div>
+
+  <table *ngIf="!carregando && pendentes.length > 0">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Registro Acadêmico</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let admin of pendentes">
+        <td>{{ admin.nome }}</td>
+        <td>{{ admin.email }}</td>
+        <td>{{ admin.registroAcademico }}</td>
+        <td>
+          <a (click)="aprovar(admin)" class="acao-link">
+            <svg class="acao-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Aprovar
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

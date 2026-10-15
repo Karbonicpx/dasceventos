@@ -4,21 +4,38 @@
 </section>
 
 <div class="secao-eventos">
+  <div class="busca-eventos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="busca-icone"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input
+      type="text"
+      placeholder="Buscar por título ou descrição..."
+      [(ngModel)]="termoBusca"
+      (keyup.enter)="buscar()"
+    />
+    <button type="button" (click)="buscar()">Buscar</button>
+    <button type="button" class="botao-secundario" *ngIf="termoBusca" (click)="limparBusca()">Limpar</button>
+  </div>
+
   <h2>Próximos eventos</h2>
   <p *ngIf="carregando">Carregando eventos...</p>
 
   <div class="estado-vazio" *ngIf="!carregando && eventos.length === 0">
-    Nenhum evento disponível no momento. Volte em breve!
+    Nenhum evento encontrado{{ termoBusca ? ' para "' + termoBusca + '"' : '' }}.
   </div>
 
   <div class="cards">
-    <div class="card" *ngFor="let evento of eventos">
-      <span class="badge" [ngClass]="'badge-' + evento.categoria.toLowerCase()">{{ rotuloCategoria(evento.categoria) }}</span>
+    <div class="card" *ngFor="let evento of eventos" [class.card-cancelado]="evento.status === 'CANCELADO'">
+      <img *ngIf="evento.fotoBanner1" [src]="evento.fotoBanner1" alt="" class="card-banner" />
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+        <span class="badge" [ngClass]="'badge-' + evento.categoria.toLowerCase()">{{ rotuloCategoria(evento.categoria) }}</span>
+        <span class="badge-status cancelado" *ngIf="evento.status === 'CANCELADO'">Cancelado</span>
+      </div>
       <h3>{{ evento.titulo }}</h3>
       <p class="card-desc">{{ evento.descricao }}</p>
-      <p class="card-info">{{ evento.data | date: 'dd/MM/yyyy' }} às {{ evento.horario }}</p>
+      <p class="card-info">{{ evento.data | date: 'dd/MM/yyyy' }} às {{ evento.horario | slice:0:5 }}</p>
       <p class="card-info">{{ evento.local }}</p>
       <p class="card-vagas"
+         *ngIf="evento.status !== 'CANCELADO'"
          [ngClass]="(evento.vagasDisponiveis ?? 0) === 0 ? 'lotado' : (evento.vagasDisponiveis ?? 0) <= 5 ? 'poucas' : 'disponivel'">
         {{ (evento.vagasDisponiveis ?? 0) === 0 ? 'Vagas esgotadas' : (evento.vagasDisponiveis + ' / ' + evento.vagasTotais + ' vagas disponíveis') }}
       </p>

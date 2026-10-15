@@ -2,7 +2,7 @@ import { Atividade, Evento } from '../models/evento.model';
 
 // Dados fictícios inspirados nas divulgações reais do DASC no Instagram
 // (@dasc.utfpr). Altere USAR_MOCK para false quando o backend estiver rodando.
-export const USAR_MOCK = true;
+export const USAR_MOCK = false;
 
 export const EVENTOS_MOCK: Evento[] = [
   {
@@ -16,7 +16,7 @@ export const EVENTOS_MOCK: Evento[] = [
     local: 'Centro de Convenções - UTFPR Curitiba',
     vagasTotais: 300,
     vagasDisponiveis: 212,
-    categoria: 'SECOMP_MAIS'
+    categoria: 'SEMANA_ACADEMICA'
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ export const EVENTOS_MOCK: Evento[] = [
     local: 'Auditório Principal - UTFPR Curitiba',
     vagasTotais: 200,
     vagasDisponiveis: 0,
-    categoria: 'COINTER'
+    categoria: 'CONGRESSO'
   },
   {
     id: 3,
@@ -42,7 +42,7 @@ export const EVENTOS_MOCK: Evento[] = [
     local: 'Pátio do Bloco A - UTFPR Curitiba',
     vagasTotais: 80,
     vagasDisponiveis: 53,
-    categoria: 'TROTE_SOLIDARIO'
+    categoria: 'ACAO_SOCIAL'
   },
   {
     id: 4,
@@ -55,7 +55,7 @@ export const EVENTOS_MOCK: Evento[] = [
     local: 'Sala de Convivência DASC - Bloco B',
     vagasTotais: 60,
     vagasDisponiveis: 38,
-    categoria: 'GRADE_NA_HORA'
+    categoria: 'ATENDIMENTO'
   },
   {
     id: 5,

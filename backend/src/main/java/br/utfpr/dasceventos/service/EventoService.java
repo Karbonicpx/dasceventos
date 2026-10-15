@@ -2,12 +2,17 @@ package br.utfpr.dasceventos.service;
 
 import br.utfpr.dasceventos.dto.EventoDTO;
 import br.utfpr.dasceventos.model.Evento;
+import br.utfpr.dasceventos.model.Inscricao;
+import br.utfpr.dasceventos.model.StatusEvento;
+import br.utfpr.dasceventos.model.StatusInscricao;
 import br.utfpr.dasceventos.repository.EventoRepository;
+import br.utfpr.dasceventos.repository.InscricaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -15,13 +20,18 @@ import java.util.List;
 public class EventoService {
 
     private final EventoRepository eventoRepository;
+    private final InscricaoRepository inscricaoRepository;
 
-    public List<Evento> listarFuturos() {
-        return eventoRepository.findByDataGreaterThanEqualOrderByDataAscHorarioAsc(LocalDate.now());
-    }
+    public List<Evento> listar(boolean todos, String busca) {
+        List<Evento> base = (busca != null && !busca.isBlank())
+                ? eventoRepository.findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(busca, busca)
+                : eventoRepository.findAll();
 
-    public List<Evento> listarTodos() {
-        return eventoRepository.findAll();
+        LocalDate hoje = LocalDate.now();
+        return base.stream()
+                .filter(e -> todos || !e.getData().isBefore(hoje))
+                .sorted(Comparator.comparing(Evento::getData).thenComparing(Evento::getHorario))
+                .toList();
     }
 
     public Evento buscarPorId(Long id) {
@@ -34,6 +44,7 @@ public class EventoService {
         Evento evento = new Evento();
         preencher(evento, dto);
         evento.setVagasDisponiveis(dto.vagasTotais());
+        evento.setStatus(StatusEvento.ATIVO);
         return eventoRepository.save(evento);
     }
 
@@ -51,6 +62,19 @@ public class EventoService {
     }
 
     @Transactional
+    public Evento cancelar(Long id) {
+        Evento evento = buscarPorId(id);
+        if (evento.getStatus() == StatusEvento.CANCELADO) {
+            throw new NegocioException("Este evento já está cancelado.");
+        }
+        evento.setStatus(StatusEvento.CANCELADO);
+        List<Inscricao> inscricoes = inscricaoRepository.findByEventoIdAndStatus(id, StatusInscricao.CONFIRMADA);
+        inscricoes.forEach(i -> i.setStatus(StatusInscricao.CANCELADA));
+        inscricaoRepository.saveAll(inscricoes);
+        return eventoRepository.save(evento);
+    }
+
+    @Transactional
     public void excluir(Long id) {
         Evento evento = buscarPorId(id);
         eventoRepository.delete(evento);
@@ -64,5 +88,8 @@ public class EventoService {
         evento.setLocal(dto.local());
         evento.setVagasTotais(dto.vagasTotais());
         evento.setCategoria(dto.categoria());
+        evento.setFotoBanner1(dto.fotoBanner1());
+        evento.setFotoBanner2(dto.fotoBanner2());
+        evento.setFotoBanner3(dto.fotoBanner3());
     }
 }

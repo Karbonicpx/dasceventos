@@ -9,7 +9,9 @@ public record AlunoRespostaDTO(
         String nome,
         String email,
         String curso,
+        String registroAcademico,
         String telefone,
+        String fotoPerfil,
         LocalDateTime dataCadastro
 ) {
     public static AlunoRespostaDTO fromEntity(Aluno aluno) {
@@ -18,7 +20,9 @@ public record AlunoRespostaDTO(
                 aluno.getNome(),
                 aluno.getEmail(),
                 aluno.getCurso(),
+                aluno.getRegistroAcademico(),
                 aluno.getTelefone(),
+                aluno.getFotoPerfil(),
                 aluno.getDataCadastro()
         );
     }

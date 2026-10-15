@@ -26,7 +26,7 @@ export class PainelAdminComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.authService.ehAdministrador()) {
-      this.router.navigate(['/login-admin']);
+      this.router.navigate(['/login'], { queryParams: { tipo: 'admin' } });
       return;
     }
     this.carregarEventos();
@@ -50,11 +50,17 @@ export class PainelAdminComponent implements OnInit {
 
   excluir(evento: Evento): void {
     if (!evento.id) return;
+    if (!confirm(`Remover definitivamente o evento "${evento.titulo}"? Essa ação não pode ser desfeita.`)) return;
     this.eventoService.excluir(evento.id).subscribe(() => this.carregarEventos());
   }
 
-  sair(): void {
-    this.authService.logout();
-    this.router.navigate(['/login-admin']);
+  cancelar(evento: Evento): void {
+    if (!evento.id) return;
+    if (!confirm(`Cancelar o evento "${evento.titulo}"? As inscrições confirmadas serão canceladas.`)) return;
+    this.eventoService.cancelar(evento.id).subscribe(() => this.carregarEventos());
+  }
+
+  ehSuperAdmin(): boolean {
+    return this.authService.ehSuperAdmin();
   }
 }

@@ -11,5 +11,4 @@ public interface InscricaoRepository extends JpaRepository<Inscricao, Long> {
     List<Inscricao> findByAlunoId(Long alunoId);
     List<Inscricao> findByEventoIdAndStatus(Long eventoId, StatusInscricao status);
     Optional<Inscricao> findByAlunoIdAndEventoId(Long alunoId, Long eventoId);
-    boolean existsByAlunoIdAndEventoIdAndStatus(Long alunoId, Long eventoId, StatusInscricao status);
 }

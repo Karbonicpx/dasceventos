@@ -2,6 +2,8 @@
 * { box-sizing: border-box; }
 
 :root {
+  color-scheme: dark;
+
   --cor-primaria: #0a0c0a;
   --cor-primaria-clara: #171c17;
   --cor-destaque: #34d879;
@@ -17,10 +19,11 @@
 
   --cor-palestra: #34d879;
   --cor-minicurso: #1f9d57;
-  --cor-secomp: #58e39a;
-  --cor-cointer: #16c77d;
-  --cor-trote: #0d8f5a;
-  --cor-grade: #2ecc71;
+  --cor-semana-academica: #58e39a;
+  --cor-congresso: #16c77d;
+  --cor-acao-social: #0d8f5a;
+  --cor-atendimento: #2ecc71;
+  --cor-outros: #6b7a6f;
 }
 
 html, body {
@@ -102,6 +105,13 @@ a:hover { text-decoration: underline; }
   flex-wrap: wrap;
 }
 
+.nav-principal a,
+.nav-principal span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .nav-principal a {
   color: rgba(255, 255, 255, 0.75);
   font-weight: 500;
@@ -112,6 +122,12 @@ a:hover { text-decoration: underline; }
 .nav-principal a:hover { color: #fff; text-decoration: none; }
 
 .nav-principal a.ativo { color: var(--cor-destaque); font-weight: 700; }
+
+.nav-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
 
 .nav-cta {
   background: var(--cor-destaque);
@@ -196,6 +212,36 @@ a:hover { text-decoration: underline; }
   font-size: 1.4rem;
 }
 
+/* ---------- Abas de tipo de conta (login / cadastro) ---------- */
+.tabs-toggle {
+  display: flex;
+  background: #0d100d;
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  padding: 0.25rem;
+  margin-bottom: 1.4rem;
+}
+
+.tabs-toggle button {
+  flex: 1;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  border: none;
+  border-radius: 7px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tabs-toggle button:hover { color: var(--cor-texto); }
+
+.tabs-toggle button.ativo {
+  background: var(--cor-destaque);
+  color: #06140c;
+}
+
 /* ---------- Formulários ---------- */
 form label {
   display: block;
@@ -234,6 +280,10 @@ form textarea:focus {
 form textarea { min-height: 90px; resize: vertical; }
 
 button, .botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
   background: var(--cor-destaque);
   color: #06140c;
   border: none;
@@ -277,6 +327,147 @@ button:disabled {
   color: var(--cor-texto-suave);
 }
 
+.campo-invalido {
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15) !important;
+}
+
+.campo-erro {
+  display: block;
+  color: #ff8a8a;
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin-top: 0.3rem;
+}
+
+/* ---------- Banner de fotos do evento ---------- */
+.banner-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+  margin: 0.4rem 0 1.1rem;
+}
+
+.banner-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  background: #0d100d;
+  border: 1px dashed var(--cor-borda);
+  border-radius: 10px;
+  padding: 0.8rem;
+}
+
+.banner-slot img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.banner-slot-vazio {
+  width: 100%;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cor-texto-suave);
+  font-size: 0.85rem;
+  background: var(--cor-cartao);
+  border-radius: 8px;
+}
+
+.banner-slot-acoes {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.banner-botao {
+  cursor: pointer;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.8rem;
+}
+
+/* ---------- Banner no detalhe do evento (slide) ---------- */
+.banner-evento {
+  position: relative;
+  margin-bottom: 1.2rem;
+  border-radius: var(--raio);
+  overflow: hidden;
+}
+
+.banner-evento img {
+  display: block;
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+}
+
+.banner-seta {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(10, 12, 10, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+/* A regra global "button:active" move o botão 1px para baixo, o que quebra a
+   centralização vertical (translateY(-50%)) desta seta - reforça o transform certo. */
+.banner-seta:active { transform: translateY(-50%); }
+
+.banner-seta:hover { background: rgba(10, 12, 10, 0.85); }
+.banner-seta svg { width: 22px; height: 22px; }
+.banner-seta-esquerda { left: 1rem; }
+.banner-seta-direita { right: 1rem; }
+
+.banner-pontos {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  background: rgba(10, 12, 10, 0.4);
+  border-radius: 20px;
+}
+
+.banner-ponto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.banner-ponto:active { transform: scale(1.15); }
+.banner-ponto:hover { background: rgba(255, 255, 255, 0.8); }
+.banner-ponto.ativo { background: var(--cor-destaque); transform: scale(1.25); }
+.banner-ponto.ativo:active { transform: scale(1.25); }
+
+.card-banner {
+  width: calc(100% + 2.8rem);
+  margin: -1.4rem -1.4rem 0;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 11px 11px 0 0;
+}
+
 .erro {
   color: #ff8a8a;
   background: #2a1414;
@@ -295,6 +486,30 @@ button:disabled {
   padding: 0.6rem 0.8rem;
   font-size: 0.9rem;
   margin-bottom: 1rem;
+}
+
+.cartao-sucesso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.9rem;
+  color: #7be8a4;
+  background: #122a19;
+  border: 1px solid #1f5c35;
+  border-radius: var(--raio);
+  padding: 1.8rem 1.4rem;
+}
+
+.cartao-sucesso-icone {
+  width: 40px;
+  height: 40px;
+}
+
+.cartao-sucesso p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 /* ---------- Seção de listagem ---------- */
@@ -343,6 +558,50 @@ button:disabled {
   transform: translateY(-3px);
   box-shadow: var(--sombra-hover);
   border-color: var(--cor-destaque);
+}
+
+.card-cancelado {
+  opacity: 0.6;
+  border-top-color: #5a2626;
+}
+
+.card-cancelado:hover { border-color: var(--cor-borda); transform: none; }
+
+/* ---------- Busca de eventos ---------- */
+.busca-eventos {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--cor-cartao);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 1.6rem;
+  flex-wrap: wrap;
+}
+
+.busca-icone {
+  width: 18px;
+  height: 18px;
+  color: var(--cor-texto-suave);
+  flex-shrink: 0;
+}
+
+.busca-eventos input {
+  flex: 1;
+  min-width: 160px;
+  border: none;
+  background: transparent;
+  color: var(--cor-texto);
+  font-size: 0.95rem;
+  padding: 0.3rem 0;
+}
+
+.busca-eventos input:focus { outline: none; }
+
+.busca-eventos button {
+  padding: 0.5rem 1rem;
+  font-size: 0.88rem;
 }
 
 .card h3 {
@@ -397,10 +656,11 @@ button:disabled {
 
 .badge-palestra { background: var(--cor-palestra); }
 .badge-minicurso { background: var(--cor-minicurso); color: #eef4ee; }
-.badge-secomp_mais { background: var(--cor-secomp); }
-.badge-cointer { background: var(--cor-cointer); }
-.badge-trote_solidario { background: var(--cor-trote); color: #eef4ee; }
-.badge-grade_na_hora { background: var(--cor-grade); }
+.badge-semana_academica { background: var(--cor-semana-academica); }
+.badge-congresso { background: var(--cor-congresso); }
+.badge-acao_social { background: var(--cor-acao-social); color: #eef4ee; }
+.badge-atendimento { background: var(--cor-atendimento); }
+.badge-outros { background: var(--cor-outros); color: #eef4ee; }
 
 /* ---------- Detalhe do evento ---------- */
 .detalhe-cabecalho {
@@ -534,6 +794,9 @@ table tbody tr:last-child td { border-bottom: none; }
 table tbody tr:hover { background: #1b201b; }
 
 .acao-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   cursor: pointer;
   font-size: 0.88rem;
   font-weight: 600;
@@ -542,6 +805,18 @@ table tbody tr:hover { background: #1b201b; }
 }
 
 .acao-link.perigo { color: #ff8a8a; }
+
+.acao-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.botao-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
 
 .lista-inscritos {
   list-style: none;
@@ -557,6 +832,94 @@ table tbody tr:hover { background: #1b201b; }
 
 .lista-inscritos li:last-child { border-bottom: none; }
 
+.badge-status {
+  display: inline-block;
+  padding: 0.18rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: rgba(52, 216, 121, 0.15);
+  color: var(--cor-destaque);
+}
+
+.badge-status.cancelado {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff8a8a;
+}
+
+/* ---------- Conta / avatar ---------- */
+.conta-foto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.8rem;
+}
+
+.avatar-grande {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--cor-borda);
+}
+
+.avatar-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cor-cartao);
+  color: var(--cor-destaque);
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.conta-botao-foto {
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.5rem 1.1rem;
+}
+
+.conta-campos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.avatar-nav {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.avatar-vazio-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cor-cartao);
+  color: var(--cor-destaque);
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 1px solid var(--cor-borda);
+}
+
+.avatar-tabela {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--cor-borda);
+  flex-shrink: 0;
+}
+
+.avatar-tabela.avatar-vazio-mini {
+  font-size: 1.1rem;
+}
+
 /* ---------- Responsivo ---------- */
 @media (max-width: 640px) {
   .hero { padding: 2.2rem 1.2rem 2.6rem; }
@@ -564,4 +927,5 @@ table tbody tr:hover { background: #1b201b; }
   .cartao { padding: 1.4rem; }
   .detalhe-cabecalho, .secao { padding: 1.3rem; }
   .nav-principal { gap: 0.8rem; }
+  .banner-evento img { height: 240px; }
 }

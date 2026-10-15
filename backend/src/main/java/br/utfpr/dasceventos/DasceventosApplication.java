@@ -4,6 +4,7 @@ import br.utfpr.dasceventos.model.Administrador;
 import br.utfpr.dasceventos.model.Atividade;
 import br.utfpr.dasceventos.model.CategoriaEvento;
 import br.utfpr.dasceventos.model.Evento;
+import br.utfpr.dasceventos.model.PapelAdministrador;
 import br.utfpr.dasceventos.repository.AdministradorRepository;
 import br.utfpr.dasceventos.repository.EventoRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -23,8 +24,9 @@ public class DasceventosApplication {
 	}
 
 	/**
-	 * Cria um administrador padrão do DASC na primeira execução, caso a tabela
-	 * esteja vazia, já que o cadastro de administrador não é exposto via API.
+	 * Cria o superadmin padrão do DASC na primeira execução, caso a tabela esteja vazia.
+	 * É a única conta que nasce já aprovada e com papel SUPERADMIN - a partir dela, novas
+	 * contas de diretoria cadastradas pela API ficam pendentes até serem validadas por ela.
 	 */
 	@Bean
 	public CommandLineRunner seedAdministrador(AdministradorRepository administradorRepository,
@@ -32,9 +34,12 @@ public class DasceventosApplication {
 		return args -> {
 			if (administradorRepository.count() == 0) {
 				Administrador admin = new Administrador();
-				admin.setNome("Sofia Kawazoe");
+				admin.setNome("Dasc Admin");
 				admin.setEmail("dasc@utfpr.edu.br");
+				admin.setRegistroAcademico("DASC-0001");
 				admin.setSenha(passwordEncoder.encode("dasc123"));
+				admin.setPapel(PapelAdministrador.SUPERADMIN);
+				admin.setAprovado(true);
 				administradorRepository.save(admin);
 			}
 		};
@@ -54,7 +59,7 @@ public class DasceventosApplication {
 					"Semana Acadêmica de Computação do DASC: palestras com profissionais de mercado, " +
 							"oficinas práticas e a tradicional maratona de programação entre os cursos de SI e ECOMP.",
 					LocalDate.of(2026, 11, 3), LocalTime.of(8, 30), "Centro de Convenções - UTFPR Curitiba",
-					300, 212, CategoriaEvento.SECOMP_MAIS);
+					300, 212, CategoriaEvento.SEMANA_ACADEMICA);
 			addAtividade(secomp, "Credenciamento", null, LocalTime.of(8, 30), 30);
 			addAtividade(secomp, "Palestra de abertura", "Mercado de trabalho em TI", LocalTime.of(9, 0), 60);
 			addAtividade(secomp, "Maratona de Programação", "Algoritmos e estrutura de dados", LocalTime.of(13, 0), 240);
@@ -65,7 +70,7 @@ public class DasceventosApplication {
 					"Congresso Internacional de Tecnologia da Informação, com apresentação de trabalhos " +
 							"científicos de alunos e pesquisadores convidados de outras instituições.",
 					LocalDate.of(2026, 11, 15), LocalTime.of(9, 0), "Auditório Principal - UTFPR Curitiba",
-					200, 0, CategoriaEvento.COINTER);
+					200, 0, CategoriaEvento.CONGRESSO);
 			addAtividade(cointer, "Abertura e credenciamento", null, LocalTime.of(9, 0), 30);
 			addAtividade(cointer, "Sessão de artigos", "Inteligência artificial aplicada", LocalTime.of(9, 30), 120);
 			addAtividade(cointer, "Mesa redonda", "Pesquisa e inovação em SI", LocalTime.of(14, 0), 90);
@@ -75,7 +80,7 @@ public class DasceventosApplication {
 					"Recepção dos calouros de Sistemas de Informação e Engenharia da Computação com " +
 							"arrecadação de alimentos e agasalhos para instituições parceiras do DASC.",
 					LocalDate.of(2026, 10, 28), LocalTime.of(10, 0), "Pátio do Bloco A - UTFPR Curitiba",
-					80, 53, CategoriaEvento.TROTE_SOLIDARIO);
+					80, 53, CategoriaEvento.ACAO_SOCIAL);
 			addAtividade(trote, "Recepção dos calouros", null, LocalTime.of(10, 0), 30);
 			addAtividade(trote, "Gincana solidária", "Arrecadação de alimentos e agasalhos", LocalTime.of(10, 30), 90);
 			addAtividade(trote, "Integração com veteranos", null, LocalTime.of(12, 0), 60);
@@ -85,7 +90,7 @@ public class DasceventosApplication {
 					"Plantão de dúvidas do DASC para auxiliar os alunos no planejamento da grade e " +
 							"matrícula do próximo semestre, com monitores de cada período.",
 					LocalDate.of(2026, 10, 24), LocalTime.of(13, 30), "Sala de Convivência DASC - Bloco B",
-					60, 38, CategoriaEvento.GRADE_NA_HORA);
+					60, 38, CategoriaEvento.ATENDIMENTO);
 			addAtividade(gradeNaHora, "Orientação de matrícula", "Como montar a grade ideal", LocalTime.of(13, 30), 60);
 			addAtividade(gradeNaHora, "Atendimento individual", null, LocalTime.of(14, 30), 90);
 			eventoRepository.save(gradeNaHora);

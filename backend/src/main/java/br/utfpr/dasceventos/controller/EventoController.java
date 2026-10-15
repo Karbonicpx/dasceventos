@@ -1,7 +1,6 @@
 package br.utfpr.dasceventos.controller;
 
 import br.utfpr.dasceventos.dto.EventoDTO;
-import br.utfpr.dasceventos.model.Evento;
 import br.utfpr.dasceventos.service.EventoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +17,10 @@ public class EventoController {
     private final EventoService eventoService;
 
     @GetMapping
-    public List<EventoDTO> listar(@RequestParam(name = "todos", defaultValue = "false") boolean todos) {
-        List<Evento> eventos = todos ? eventoService.listarTodos() : eventoService.listarFuturos();
-        return eventos.stream().map(EventoDTO::fromEntity).toList();
+    public List<EventoDTO> listar(
+            @RequestParam(name = "todos", defaultValue = "false") boolean todos,
+            @RequestParam(name = "busca", required = false) String busca) {
+        return eventoService.listar(todos, busca).stream().map(EventoDTO::fromEntity).toList();
     }
 
     @GetMapping("/{id}")
@@ -43,5 +43,10 @@ public class EventoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long id) {
         eventoService.excluir(id);
+    }
+
+    @PostMapping("/{id}/cancelar")
+    public EventoDTO cancelar(@PathVariable Long id) {
+        return EventoDTO.fromEntity(eventoService.cancelar(id));
     }
 }

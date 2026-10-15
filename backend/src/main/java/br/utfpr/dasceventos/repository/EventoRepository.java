@@ -10,4 +10,5 @@ import java.util.List;
 public interface EventoRepository extends JpaRepository<Evento, Long> {
     List<Evento> findByDataGreaterThanEqualOrderByDataAscHorarioAsc(LocalDate data);
     List<Evento> findByCategoria(CategoriaEvento categoria);
+    List<Evento> findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(String titulo, String descricao);
 }

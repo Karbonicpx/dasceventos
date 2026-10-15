@@ -1,0 +1,23 @@
+<div class="secao-eventos">
+  <h2>Minhas Inscrições</h2>
+
+  <p *ngIf="carregando">Carregando...</p>
+
+  <div class="estado-vazio" *ngIf="!carregando && inscricoes.length === 0">
+    Você ainda não se inscreveu em nenhum evento. <a routerLink="/eventos">Ver eventos disponíveis</a>.
+  </div>
+
+  <div class="cards" *ngIf="!carregando && inscricoes.length > 0">
+    <div class="card" *ngFor="let inscricao of inscricoes">
+      <span class="badge-status" [class.cancelado]="inscricao.status === 'CANCELADA'">
+        {{ inscricao.status === 'CANCELADA' ? 'Cancelada' : 'Confirmada' }}
+      </span>
+      <h3>{{ inscricao.eventoTitulo }}</h3>
+      <p class="card-info">Inscrito em {{ inscricao.dataInscricao | date: 'dd/MM/yyyy' }}</p>
+      <div style="display: flex; gap: 0.8rem; margin-top: 0.6rem;">
+        <a [routerLink]="['/eventos', inscricao.eventoId]" class="botao botao-secundario">Ver evento</a>
+        <button *ngIf="inscricao.status === 'CONFIRMADA'" (click)="cancelar(inscricao)" class="botao-perigo">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

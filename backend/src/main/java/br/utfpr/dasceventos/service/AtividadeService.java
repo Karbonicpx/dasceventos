@@ -24,6 +24,9 @@ public class AtividadeService {
     @Transactional
     public Atividade cadastrar(Long eventoId, AtividadeDTO dto) {
         Evento evento = eventoService.buscarPorId(eventoId);
+        if (dto.horario().isBefore(evento.getHorario())) {
+            throw new NegocioException("O horário da atividade deve ser igual ou posterior ao início do evento (" + evento.getHorario() + ").");
+        }
         Atividade atividade = new Atividade();
         atividade.setNome(dto.nome());
         atividade.setTema(dto.tema());

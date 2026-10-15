@@ -3,12 +3,14 @@ package br.utfpr.dasceventos.service;
 import br.utfpr.dasceventos.model.Aluno;
 import br.utfpr.dasceventos.model.Evento;
 import br.utfpr.dasceventos.model.Inscricao;
+import br.utfpr.dasceventos.model.StatusEvento;
 import br.utfpr.dasceventos.model.StatusInscricao;
 import br.utfpr.dasceventos.repository.InscricaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,7 +26,12 @@ public class InscricaoService {
         Aluno aluno = alunoService.buscarPorId(alunoId);
         Evento evento = eventoService.buscarPorId(eventoId);
 
-        if (inscricaoRepository.existsByAlunoIdAndEventoIdAndStatus(alunoId, eventoId, StatusInscricao.CONFIRMADA)) {
+        if (evento.getStatus() == StatusEvento.CANCELADO) {
+            throw new NegocioException("Este evento foi cancelado e não aceita novas inscrições.");
+        }
+
+        Inscricao inscricao = inscricaoRepository.findByAlunoIdAndEventoId(alunoId, eventoId).orElse(null);
+        if (inscricao != null && inscricao.getStatus() == StatusInscricao.CONFIRMADA) {
             throw new NegocioException("Aluno já está inscrito neste evento.");
         }
         if (evento.getVagasDisponiveis() <= 0) {
@@ -33,10 +40,15 @@ public class InscricaoService {
 
         evento.setVagasDisponiveis(evento.getVagasDisponiveis() - 1);
 
-        Inscricao inscricao = new Inscricao();
-        inscricao.setAluno(aluno);
-        inscricao.setEvento(evento);
+        // Reaproveita a inscrição existente (ex.: uma cancelada anteriormente) em vez de criar
+        // uma nova linha, já que (aluno_id, evento_id) é uma constraint única na tabela.
+        if (inscricao == null) {
+            inscricao = new Inscricao();
+            inscricao.setAluno(aluno);
+            inscricao.setEvento(evento);
+        }
         inscricao.setStatus(StatusInscricao.CONFIRMADA);
+        inscricao.setDataInscricao(LocalDateTime.now());
         return inscricaoRepository.save(inscricao);
     }
 

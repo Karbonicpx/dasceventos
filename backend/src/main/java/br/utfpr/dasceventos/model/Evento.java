@@ -56,6 +56,20 @@ public class Evento {
     @Column(nullable = false, length = 30)
     private CategoriaEvento categoria;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private StatusEvento status = StatusEvento.ATIVO;
+
+    @Column(name = "foto_banner_1", columnDefinition = "LONGTEXT")
+    private String fotoBanner1;
+
+    @Column(name = "foto_banner_2", columnDefinition = "LONGTEXT")
+    private String fotoBanner2;
+
+    @Column(name = "foto_banner_3", columnDefinition = "LONGTEXT")
+    private String fotoBanner3;
+
     @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Atividade> atividades = new ArrayList<>();
 

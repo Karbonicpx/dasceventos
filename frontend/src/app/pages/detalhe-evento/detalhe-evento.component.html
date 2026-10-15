@@ -1,15 +1,38 @@
 <div class="container" *ngIf="evento">
   <a routerLink="/eventos" class="voltar">&larr; Voltar aos eventos</a>
 
+  <div class="banner-evento" *ngIf="banners.length">
+    <img [src]="banners[bannerIndex]" alt="" />
+
+    <ng-container *ngIf="banners.length > 1">
+      <button type="button" class="banner-seta banner-seta-esquerda" (click)="bannerAnterior()" aria-label="Foto anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <button type="button" class="banner-seta banner-seta-direita" (click)="proximoBanner()" aria-label="Próxima foto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+
+      <div class="banner-pontos">
+        <button type="button" *ngFor="let foto of banners; let i = index"
+                class="banner-ponto" [class.ativo]="i === bannerIndex"
+                (click)="irParaBanner(i)" [attr.aria-label]="'Ir para foto ' + (i + 1)">
+        </button>
+      </div>
+    </ng-container>
+  </div>
+
   <div class="detalhe-cabecalho">
-    <span class="badge" [ngClass]="'badge-' + evento.categoria.toLowerCase()">{{ rotuloCategoria(evento.categoria) }}</span>
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <span class="badge" [ngClass]="'badge-' + evento.categoria.toLowerCase()">{{ rotuloCategoria(evento.categoria) }}</span>
+      <span class="badge-status cancelado" *ngIf="evento.status === 'CANCELADO'">Cancelado</span>
+    </div>
     <h2>{{ evento.titulo }}</h2>
     <p class="detalhe-descricao">{{ evento.descricao }}</p>
 
     <div class="detalhe-grade">
       <div class="detalhe-item">
         <span class="rotulo">Data e horário</span>
-        <span class="valor">{{ evento.data | date: 'dd/MM/yyyy' }} às {{ evento.horario }}</span>
+        <span class="valor">{{ evento.data | date: 'dd/MM/yyyy' }} às {{ evento.horario | slice:0:5 }}</span>
       </div>
       <div class="detalhe-item">
         <span class="rotulo">Local</span>
@@ -24,14 +47,17 @@
     <div *ngIf="authService.usuarioAtual()?.tipo === 'ALUNO'">
       <p class="erro" *ngIf="erro">{{ erro }}</p>
       <p class="sucesso" *ngIf="mensagem">{{ mensagem }}</p>
-      <button *ngIf="!minhaInscricao" (click)="inscrever()" [disabled]="(evento.vagasDisponiveis ?? 0) <= 0">
+      <button *ngIf="!minhaInscricao && evento.status !== 'CANCELADO'" (click)="inscrever()" [disabled]="(evento.vagasDisponiveis ?? 0) <= 0">
         {{ (evento.vagasDisponiveis ?? 0) <= 0 ? 'Vagas esgotadas' : 'Inscrever-se' }}
       </button>
+      <p *ngIf="!minhaInscricao && evento.status === 'CANCELADO'" style="color: var(--cor-texto-suave)">
+        Este evento foi cancelado e não aceita novas inscrições.
+      </p>
       <button *ngIf="minhaInscricao" (click)="cancelar()" class="botao-perigo">Cancelar inscrição</button>
     </div>
 
     <p *ngIf="!authService.estaLogado()" class="link-rodape">
-      <a routerLink="/login-aluno">Entre como aluno</a> para se inscrever neste evento.
+      <a routerLink="/login">Entre como aluno</a> para se inscrever neste evento.
     </p>
   </div>
 
@@ -39,7 +65,7 @@
     <h3>Programação</h3>
     <ul class="timeline" *ngIf="atividades.length > 0">
       <li *ngFor="let atividade of atividades">
-        <span class="horario">{{ atividade.horario }}</span>
+        <span class="horario">{{ atividade.horario | slice:0:5 }}</span>
         <span>
           <span class="atividade-nome">{{ atividade.nome }}</span>
           <span class="atividade-tema" *ngIf="atividade.tema"> &mdash; {{ atividade.tema }}</span>

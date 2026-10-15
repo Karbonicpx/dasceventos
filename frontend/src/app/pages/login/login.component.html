@@ -1,0 +1,24 @@
+<div class="pagina-estreita">
+  <div class="cartao">
+    <div class="tabs-toggle">
+      <button type="button" [class.ativo]="tipo === 'ALUNO'" (click)="escolher('ALUNO')">Aluno</button>
+      <button type="button" [class.ativo]="tipo === 'ADMIN'" (click)="escolher('ADMIN')">Diretoria DASC</button>
+    </div>
+
+    <h2>{{ tipo === 'ALUNO' ? 'Entrar como aluno' : 'Entrar — Diretoria do DASC' }}</h2>
+
+    <form (ngSubmit)="entrar()">
+      <label>
+        E-mail
+        <input type="email" name="email" [(ngModel)]="email" required />
+      </label>
+      <label>
+        Senha
+        <input type="password" name="senha" [(ngModel)]="senha" required />
+      </label>
+      <p class="erro" *ngIf="erro">{{ erro }}</p>
+      <button type="submit">Entrar</button>
+    </form>
+    <p class="link-rodape">Não tem conta? <a routerLink="/cadastro" [queryParams]="{ tipo: tipo === 'ADMIN' ? 'admin' : null }">Cadastre-se</a></p>
+  </div>
+</div>

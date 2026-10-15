@@ -20,12 +20,23 @@ public class AlunoService {
         if (alunoRepository.existsByEmail(dto.email())) {
             throw new NegocioException("Já existe um aluno cadastrado com este e-mail.");
         }
+        if (alunoRepository.existsByRegistroAcademico(dto.registroAcademico())) {
+            throw new NegocioException("Já existe um aluno cadastrado com este registro acadêmico.");
+        }
         Aluno aluno = new Aluno();
         aluno.setNome(dto.nome());
         aluno.setEmail(dto.email());
         aluno.setCurso(dto.curso());
+        aluno.setRegistroAcademico(dto.registroAcademico());
         aluno.setTelefone(dto.telefone());
         aluno.setSenha(passwordEncoder.encode(dto.senha()));
+        return alunoRepository.save(aluno);
+    }
+
+    @Transactional
+    public Aluno atualizarFoto(Long id, String fotoPerfilBase64) {
+        Aluno aluno = buscarPorId(id);
+        aluno.setFotoPerfil(fotoPerfilBase64);
         return alunoRepository.save(aluno);
     }
 

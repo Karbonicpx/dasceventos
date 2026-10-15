@@ -1,0 +1,94 @@
+<div class="pagina-estreita">
+  <div class="cartao">
+    <div class="tabs-toggle">
+      <button type="button" [class.ativo]="tipo === 'ALUNO'" (click)="escolher('ALUNO')">Aluno</button>
+      <button type="button" [class.ativo]="tipo === 'ADMIN'" (click)="escolher('ADMIN')">Diretoria DASC</button>
+    </div>
+
+    <h2>{{ tipo === 'ALUNO' ? 'Cadastro de Aluno' : 'Cadastro — Diretoria do DASC' }}</h2>
+
+    <form *ngIf="tipo === 'ALUNO'" #formAluno="ngForm" (ngSubmit)="cadastrar(formAluno)" novalidate>
+      <label>
+        Nome
+        <input type="text" name="nome" [(ngModel)]="dtoAluno.nome" required #nome="ngModel"
+               [class.campo-invalido]="formAluno.submitted && nome.invalid" />
+        <span class="campo-erro" *ngIf="formAluno.submitted && nome.invalid">Informe seu nome.</span>
+      </label>
+      <label>
+        E-mail
+        <input type="email" email name="email" [(ngModel)]="dtoAluno.email" required #email="ngModel"
+               [class.campo-invalido]="formAluno.submitted && email.invalid" />
+        <span class="campo-erro" *ngIf="formAluno.submitted && email.errors?.['required']">Informe seu e-mail.</span>
+        <span class="campo-erro" *ngIf="formAluno.submitted && email.errors?.['email']">Informe um e-mail válido.</span>
+      </label>
+      <label>
+        Curso
+        <select name="curso" [(ngModel)]="dtoAluno.curso" required #curso="ngModel"
+                [class.campo-invalido]="formAluno.submitted && curso.invalid">
+          <option value="Sistemas de Informação">Sistemas de Informação</option>
+          <option value="Engenharia de Computação">Engenharia de Computação</option>
+        </select>
+        <span class="campo-erro" *ngIf="formAluno.submitted && curso.invalid">Selecione seu curso.</span>
+      </label>
+      <label>
+        Registro Acadêmico (RA)
+        <input type="text" name="registroAcademico" [(ngModel)]="dtoAluno.registroAcademico" required placeholder="Ex.: 2024105432" #ra="ngModel"
+               [class.campo-invalido]="formAluno.submitted && ra.invalid" />
+        <span class="campo-erro" *ngIf="formAluno.submitted && ra.invalid">Informe seu registro acadêmico.</span>
+      </label>
+      <label>
+        Telefone
+        <input type="tel" name="telefone" [(ngModel)]="dtoAluno.telefone" />
+      </label>
+      <label>
+        Senha
+        <input type="password" name="senha" [(ngModel)]="dtoAluno.senha" required minlength="6" #senha="ngModel"
+               [class.campo-invalido]="formAluno.submitted && senha.invalid" />
+        <span class="campo-erro" *ngIf="formAluno.submitted && senha.errors?.['required']">Crie uma senha.</span>
+        <span class="campo-erro" *ngIf="formAluno.submitted && senha.errors?.['minlength']">A senha deve ter no mínimo 6 caracteres.</span>
+      </label>
+      <p class="erro" *ngIf="erro">{{ erro }}</p>
+      <p class="sucesso" *ngIf="sucesso">Cadastro realizado! Redirecionando para o login...</p>
+      <button type="submit">Cadastrar</button>
+    </form>
+
+    <div *ngIf="tipo === 'ADMIN' && sucesso" class="cartao-sucesso">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cartao-sucesso-icone"><path d="M12 2 4 5v6c0 5 3.4 8.4 8 11 4.6-2.6 8-6 8-11V5l-8-3Z"></path><path d="M9 12l2 2 4-4"></path></svg>
+      <p>Cadastro enviado! Sua conta precisa ser validada pela diretoria do DASC antes do primeiro acesso.</p>
+      <a routerLink="/login" [queryParams]="{ tipo: 'admin' }" class="botao">Ir para o login</a>
+    </div>
+
+    <form *ngIf="tipo === 'ADMIN' && !sucesso" #formAdmin="ngForm" (ngSubmit)="cadastrar(formAdmin)" novalidate>
+      <label>
+        Nome
+        <input type="text" name="nome" [(ngModel)]="dtoAdmin.nome" required #nomeAdmin="ngModel"
+               [class.campo-invalido]="formAdmin.submitted && nomeAdmin.invalid" />
+        <span class="campo-erro" *ngIf="formAdmin.submitted && nomeAdmin.invalid">Informe seu nome.</span>
+      </label>
+      <label>
+        E-mail
+        <input type="email" email name="email" [(ngModel)]="dtoAdmin.email" required #emailAdmin="ngModel"
+               [class.campo-invalido]="formAdmin.submitted && emailAdmin.invalid" />
+        <span class="campo-erro" *ngIf="formAdmin.submitted && emailAdmin.errors?.['required']">Informe seu e-mail.</span>
+        <span class="campo-erro" *ngIf="formAdmin.submitted && emailAdmin.errors?.['email']">Informe um e-mail válido.</span>
+      </label>
+      <label>
+        Registro Acadêmico (RA)
+        <input type="text" name="registroAcademico" [(ngModel)]="dtoAdmin.registroAcademico" required placeholder="Ex.: 2024105432" #raAdmin="ngModel"
+               [class.campo-invalido]="formAdmin.submitted && raAdmin.invalid" />
+        <span class="campo-erro" *ngIf="formAdmin.submitted && raAdmin.invalid">Informe seu registro acadêmico.</span>
+      </label>
+      <label>
+        Senha
+        <input type="password" name="senha" [(ngModel)]="dtoAdmin.senha" required minlength="6" #senhaAdmin="ngModel"
+               [class.campo-invalido]="formAdmin.submitted && senhaAdmin.invalid" />
+        <span class="campo-erro" *ngIf="formAdmin.submitted && senhaAdmin.errors?.['required']">Crie uma senha.</span>
+        <span class="campo-erro" *ngIf="formAdmin.submitted && senhaAdmin.errors?.['minlength']">A senha deve ter no mínimo 6 caracteres.</span>
+      </label>
+      <p class="erro" *ngIf="erro">{{ erro }}</p>
+      <button type="submit">Cadastrar</button>
+    </form>
+
+    <p class="link-rodape">Já tem conta? <a routerLink="/login" [queryParams]="{ tipo: tipo === 'ADMIN' ? 'admin' : null }">Entrar</a></p>
+  </div>
+</div>

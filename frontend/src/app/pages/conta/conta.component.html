@@ -1,0 +1,36 @@
+<div class="pagina-estreita">
+  <div class="cartao">
+    <h2>Minha Conta</h2>
+
+    <div class="conta-foto">
+      <img *ngIf="fotoAtual()" [src]="fotoAtual()" class="avatar-grande" alt="Foto de perfil" />
+      <div *ngIf="!fotoAtual()" class="avatar-grande avatar-vazio">{{ iniciais() }}</div>
+
+      <label class="botao botao-secundario conta-botao-foto">
+        {{ enviando ? 'Enviando...' : 'Trocar foto' }}
+        <input type="file" accept="image/*" (change)="selecionarFoto($event)" [disabled]="enviando" hidden />
+      </label>
+      <p class="erro" *ngIf="erro">{{ erro }}</p>
+    </div>
+
+    <div class="conta-campos" *ngIf="usuario?.tipo === 'ALUNO' && perfilAluno">
+      <div class="detalhe-item"><span class="rotulo">Nome</span><span class="valor">{{ perfilAluno.nome }}</span></div>
+      <div class="detalhe-item"><span class="rotulo">E-mail</span><span class="valor">{{ perfilAluno.email }}</span></div>
+      <div class="detalhe-item"><span class="rotulo">Curso</span><span class="valor">{{ perfilAluno.curso }}</span></div>
+      <div class="detalhe-item"><span class="rotulo">Registro Acadêmico</span><span class="valor">{{ perfilAluno.registroAcademico }}</span></div>
+      <div class="detalhe-item" *ngIf="perfilAluno.telefone">
+        <span class="rotulo">Telefone</span><span class="valor">{{ perfilAluno.telefone }}</span>
+      </div>
+    </div>
+
+    <div class="conta-campos" *ngIf="usuario?.tipo === 'ADMINISTRADOR' && perfilAdmin">
+      <div class="detalhe-item"><span class="rotulo">Nome</span><span class="valor">{{ perfilAdmin.nome }}</span></div>
+      <div class="detalhe-item"><span class="rotulo">E-mail</span><span class="valor">{{ perfilAdmin.email }}</span></div>
+      <div class="detalhe-item"><span class="rotulo">Registro Acadêmico</span><span class="valor">{{ perfilAdmin.registroAcademico }}</span></div>
+      <div class="detalhe-item">
+        <span class="rotulo">Papel</span>
+        <span class="valor">{{ perfilAdmin.papel === 'SUPERADMIN' ? 'Superadmin' : 'Diretoria' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

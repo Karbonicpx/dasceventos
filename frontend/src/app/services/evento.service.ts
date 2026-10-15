@@ -10,8 +10,10 @@ export class EventoService {
 
   constructor(private http: HttpClient) {}
 
-  listar(todos = false): Observable<Evento[]> {
-    return this.http.get<Evento[]>(API, { params: { todos } });
+  listar(todos = false, busca?: string): Observable<Evento[]> {
+    const params: Record<string, string | boolean> = { todos };
+    if (busca) params['busca'] = busca;
+    return this.http.get<Evento[]>(API, { params });
   }
 
   buscar(id: number): Observable<Evento> {
@@ -30,11 +32,19 @@ export class EventoService {
     return this.http.delete<void>(`${API}/${id}`);
   }
 
+  cancelar(id: number): Observable<Evento> {
+    return this.http.post<Evento>(`${API}/${id}/cancelar`, {});
+  }
+
   listarAtividades(eventoId: number): Observable<Atividade[]> {
     return this.http.get<Atividade[]>(`${API}/${eventoId}/atividades`);
   }
 
   cadastrarAtividade(eventoId: number, atividade: Atividade): Observable<Atividade> {
     return this.http.post<Atividade>(`${API}/${eventoId}/atividades`, atividade);
+  }
+
+  excluirAtividade(eventoId: number, atividadeId: number): Observable<void> {
+    return this.http.delete<void>(`${API}/${eventoId}/atividades/${atividadeId}`);
   }
 }

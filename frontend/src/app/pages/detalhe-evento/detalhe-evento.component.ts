@@ -18,6 +18,27 @@ export class DetalheEventoComponent implements OnInit {
   minhaInscricao?: Inscricao;
   mensagem = '';
   erro = '';
+  bannerIndex = 0;
+
+  get banners(): string[] {
+    if (!this.evento) return [];
+    return [this.evento.fotoBanner1, this.evento.fotoBanner2, this.evento.fotoBanner3]
+      .filter((foto): foto is string => !!foto);
+  }
+
+  bannerAnterior(): void {
+    const total = this.banners.length;
+    this.bannerIndex = (this.bannerIndex - 1 + total) % total;
+  }
+
+  proximoBanner(): void {
+    const total = this.banners.length;
+    this.bannerIndex = (this.bannerIndex + 1) % total;
+  }
+
+  irParaBanner(indice: number): void {
+    this.bannerIndex = indice;
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -57,10 +78,11 @@ export class DetalheEventoComponent implements OnInit {
     const rotulos: Record<string, string> = {
       PALESTRA: 'Palestra',
       MINICURSO: 'Minicurso',
-      SECOMP_MAIS: 'SECOMP+',
-      COINTER: 'COINTER',
-      TROTE_SOLIDARIO: 'Trote Solidário',
-      GRADE_NA_HORA: 'Grade na Hora'
+      SEMANA_ACADEMICA: 'Semana Acadêmica',
+      CONGRESSO: 'Congresso',
+      ACAO_SOCIAL: 'Ação Social',
+      ATENDIMENTO: 'Atendimento',
+      OUTROS: 'Outros'
     };
     return rotulos[categoria] ?? categoria;
   }

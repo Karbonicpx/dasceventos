@@ -26,6 +26,20 @@ public class Administrador {
     private String email;
 
     @NotBlank
+    @Column(name = "registro_academico", nullable = false, unique = true, length = 20)
+    private String registroAcademico;
+
+    @NotBlank
     @Column(nullable = false, length = 255)
     private String senha;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private PapelAdministrador papel = PapelAdministrador.DIRETORIA;
+
+    @Column(nullable = false)
+    private boolean aprovado = false;
+
+    @Column(name = "foto_perfil", columnDefinition = "LONGTEXT")
+    private String fotoPerfil;
 }
